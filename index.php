@@ -33,7 +33,21 @@ if($_POST){
         $eid = $_POST['eid'];
         $msg = $_POST['msg'];
         $num = $_POST['num'];
+		
+        $department  = $_POST['department'];
+        $applicant  = $_POST['applicant'];
+        $myDate  = $_POST['myDate'];
+        $myDate1  = $_POST['myDate1'];
+        $myDate2  = $_POST['myDate2'];
+        $mytime1  = $_POST['mytime1'];
+        $mytime2  = $_POST['mytime2'];
+        $purpose  = $_POST['purpose'];
+        $checkbox = $_POST['checkbox0'];
+        $checkbox1 = $_POST['checkbox1'];
+        $description = $_POST['description'];
+        
 
+		
         // 送到流程管理
         try{
             $procesesStr = $client->findFormOIDsOfProcess($oid);
@@ -41,13 +55,25 @@ if($_POST){
             $proceses = explode(",", $procesesStr);
             $process = $proceses[0];
             $template = $client->getFormFieldTemplate($process);
-
+			
             $form = simplexml_load_string($template);
-            $form->Textbox0 = $msg;
-            $form->Textbox1 = $num;
-
+            
+            $form->Textbox9 = $department ;
+			
+            $form->Textbox10 = $applicant ;
+            $form->Date0 = $myDate ;
+            $form->Date1 = $myDate1 ;
+            $form->Date2 = $myDate2 ;
+            $form->Time12 = $mytime1 ;
+            $form->Time13 = $mytime2 ;
+            $form->Textbox13 = $purpose ;
+            $form->Checkbox16 = $checkbox;
+            $form->Checkbox17 = $checkbox1;
+            $form->TextArea1 = $description;
             $result = $form->asXML();
+			
             $client->invokeProcess($oid, $eid, $uid, $process, $result, "伺服器代管申請作業");
+
         }catch(Exception $e){
         echo $e->getMessage();
         }
@@ -109,6 +135,8 @@ if($_POST){
                   </div>
                 </div>
           </div>
+		  
+		
 
           <div class="row">
               <div class="col-md-12 mb-3">
@@ -119,7 +147,49 @@ if($_POST){
                   </div>
                 </div>
           </div>
-
+			<div class="row">
+			  <div class="col-md-12 mb-3">
+				  <label >申請單位</label>
+				  <input type="text" name="department" class="form-control"><br>
+				  <label >申請人/分機</label>
+				  <input type="text" name="applicant"  class="form-control"><br>
+				  <label >申請日期</label>
+				  <input type="date" name="myDate"  class="form-control"><br>
+				  <label >刊登時間</label>
+				  <input type="date" name="myDate1" class="form-control"><input type="time" name="mytime1" class="form-control">
+				  至
+				  <input type="date" name="myDate2" class="form-control"><input type="time" name="mytime2" class="form-control">
+				  <label >目的</label>
+				  <input type="text" name="purpose"  class="form-control"><br>
+				</div>
+			</div>
+			
+			<div class="row">
+			  <div class="col-md-12 mb-3">
+				  <label >申請事項 </label><br>
+				  <label ><input name="checkbox0" type="Radio" value="1" >Banner(1004x300像素)</label >
+				  <label ><input name="checkbox0" type="Radio" value="2" >跑馬燈</label >
+				  <label ><input name="checkbox0" type="Radio" value="3" >快速連結</label >
+				  <label ><input name="checkbox0" type="Radio" value="4" >網頁內容</label >
+				  <label ><input name="checkbox0" type="Radio" value="5" >網頁版面</label >
+				  <label ><input name="checkbox0" type="Radio" value="6" >增建帳號</label >
+				  <label ><input name="checkbox0" type="Radio" value="7" >其他</label >
+				  <br>
+				  <label >協助事項 </label><br>
+				  <label ><input name="checkbox1" type="Radio" value="1" >新增</label >
+				  <label ><input name="checkbox1" type="Radio" value="2" >修改</label >
+				  <label ><input name="checkbox1" type="Radio" value="3" >刪除</label>
+				  <br>
+          <label >申請注意事項說明 </label><br>
+          <textarea name="description" style="width:400px;height:120px;"></textarea><br>
+				  <label >注意事項</label><br>
+				  1. 申請事項說明以簡單扼要為原則。<br>
+				  2. 申請單位應負刊登文字責任。<br>
+				  3. 相關檔案請寄到公務信箱banner：bcoffice01@nkust.edu.tw (請在刊登日前3天寄出)。<br>
+				  其他： chunting@nkust.edu.tw<br>
+				</div>
+			</div>
+      
           <hr class="mb-4">
           <button class="btn btn-primary btn-lg btn-block" type="submit">送出</button>
         </form>
